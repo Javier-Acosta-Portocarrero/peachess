@@ -67,23 +67,6 @@ class Chessboard:
         current_piece.position = destination
         current_piece.after_move_effects(self, captured_piece)
 
-    def is_valid_cell(self, cell: tuple[int, int]) -> bool:
-        """Checks if a given cell of the chessboard exists.
-        
-        Args:
-            cell: Position of the cell.
-
-        Returns: True if it a valid cell or False if not.
-        """
-        row, column = cell
-
-        if row < 0 or row >= self.amount_of_rows:
-            return False
-        elif column < 0 or column >= len(self.board[row]):
-            return False
-        
-        return True
-
     def is_cell_empty(self, cell: tuple[int, int]) -> bool:
         """Checks if a given cell of the chessboard is empty.
         
@@ -110,6 +93,23 @@ class Chessboard:
         if self._is_valid_cell() and self.board[row][column].color != piece_color:
             return True
         return False
+    
+    def _is_valid_cell(self, cell: tuple[int, int]) -> bool:
+        """Checks if a given cell of the chessboard exists.
+        
+        Args:
+            cell: Position of the cell.
+
+        Returns: True if it a valid cell or False if not.
+        """
+        row, column = cell
+
+        if row < 0 or row >= self.amount_of_rows:
+            return False
+        elif column < 0 or column >= len(self.board[row]):
+            return False
+        
+        return True
     
     def _validate_move(self, piece_position: tuple[int, int], destination: tuple[int, int]) -> None:
         """Validates a move, if it is valid nothing happens, but if it is not, an exception is raised.
