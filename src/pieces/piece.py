@@ -1,13 +1,12 @@
 """Contains the abstract class of the chess pieces."""
 
-# Allows using type annotations for classes that are defined later (needed to use Piece argument in 'after_move_effects').
+# Allows using type annotations for classes that are defined later (needed to use Piece argument in 'apply_after_move_effects').
 from __future__ import annotations 
 
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from color import Color
-from chessboard.chessboard import Chessboard
 
 # Used only by type annotations to avoid circular dependencies at runtime (needed because 
 # chessboard.py imports Piece and piece.py imports chessboard).
@@ -26,6 +25,7 @@ class Piece(ABC):
         """
         self.position = position
         self.color = color
+        self.can_promote = False
     
     @abstractmethod
     def possible_moves(self, board: Chessboard) -> list[tuple[int, int]]:
@@ -44,7 +44,7 @@ class Piece(ABC):
         """Returns the string representation of the piece."""
         pass
 
-    def after_move_effects(self, board: Chessboard, piece_captured: Piece | None = None) -> None:
+    def apply_after_move_effects(self, board: Chessboard, piece_captured: Piece | None = None) -> None:
         """General method used to apply the effects of a move, for a example, a pawn can promote if the 
         move ends in the last row od the chessboard, new non conventional pieces may be added, so information
         like if it has captured an specific enemy piece can be importante fot the effects.
