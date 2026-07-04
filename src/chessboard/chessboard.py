@@ -2,7 +2,7 @@
 
 from typing import TYPE_CHECKING
 
-from pieces.piece import Piece
+from pieces.piece import Piece, Color
 
 # Used only by type annotations to avoid circular dependencies at runtime (needed because 
 # chessboard.py imports Piece and piece.py imports chessboard).
@@ -67,11 +67,13 @@ class Chessboard:
         current_piece.position = destination
         current_piece.after_move_effects(self, captured_piece)
 
-    def _is_valid_cell(self, cell: tuple[int, int]) -> bool:
+    def is_valid_cell(self, cell: tuple[int, int]) -> bool:
         """Checks if a given cell of the chessboard exists.
         
         Args:
             cell: Position of the cell.
+
+        Returns: True if it a valid cell or False if not.
         """
         row, column = cell
 
@@ -81,6 +83,33 @@ class Chessboard:
             return False
         
         return True
+
+    def is_cell_empty(self, cell: tuple[int, int]) -> bool:
+        """Checks if a given cell of the chessboard is empty.
+        
+        Args:
+            cell: Position of the cell.
+
+        Returns: True if it is empty or False if not.
+        """
+        row, column = cell
+        if self._is_valid_cell() and self.board[row][column] is None:
+            return True
+        return False
+    
+    def cell_has_enemy_piece(self, cell: tuple[int, int], piece_color: Color) -> bool:
+        """Checks if a given cell of the chessboard has a enemy piece from the color specified.
+        
+        Args:
+            cell: Position of the cell.
+            piece_color: Color of the piece.
+
+        Returns: True if it has an enemy piece or False if not.
+        """
+        row, column = cell
+        if self._is_valid_cell() and self.board[row][column].color != piece_color:
+            return True
+        return False
     
     def _validate_move(self, piece_position: tuple[int, int], destination: tuple[int, int]) -> None:
         """Validates a move, if it is valid nothing happens, but if it is not, an exception is raised.
